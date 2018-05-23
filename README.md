@@ -12,5 +12,5 @@ APIDoc(app)
 
 @app.route('/')
 def index():
-    return 'Hell flask api doc'
+    return 'Hello flask api doc'
 ```
