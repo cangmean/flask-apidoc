@@ -4,9 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link href="https://cdn.bootcss.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <title>Api 接口列表</title>
 </head>
 <body>
-    <p>hello world</p>
+    <div class="container" style="margin-top: 100px;">
+        <div class="row">
+            <div class="list-group" style="width: 100%;">
+                {% for api in api_list %}
+                <div class="list-group-item">
+                    <a href="/apidocs/{{ api.endpoint }}">
+                        {{ api.url }}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 </body>
 </html>
