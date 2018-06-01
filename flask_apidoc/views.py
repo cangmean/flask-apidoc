@@ -15,3 +15,9 @@ bp = Blueprint(
 def index():
     api_list = flask_apidoc._api_list
     return render_template('index.html', api_list=api_list)
+
+
+@bp.route('/<endpoint>')
+def endpoint(endpoint):
+    api = flask_apidoc._api_list.get(endpoint)
+    return api.endpoint

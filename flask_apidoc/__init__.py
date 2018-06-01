@@ -2,8 +2,10 @@ from flask import request, Blueprint, Flask
 from flask_apidoc import views
 from types import MethodType
 from functools import wraps, update_wrapper
+from collections import OrderedDict
+import yaml
 
-_api_list = []
+_api_list = OrderedDict()
 
 
 def fire_event_bp(func, apidoc):
@@ -24,25 +26,25 @@ class _Api(object):
         self.methods = methods
         self.func = func
     
-    def _doc(self):
-        return self.func.__doc__
+    @property
+    def doc(self):
+        return self.parse_doc(self._doc())
     
+    def _doc(self):
+        return self.func.__doc__ or ''
+
     @property
     def hash_key(self):
         return hash(self.endpoint)
-    
+
     def __hash__(self):
         return self.hash_key
-    
+
     def __eq__(self, other):
         if not getattr(other, 'hash_key'):
             return False
         return self.hash_key == other.hash_key
 
-    @property
-    def doc(self):
-        return self._doc()
-    
     def __repr__(self):
         return '<Api url: {}, endpoint: {}>'.format(self.url, self.endpoint)
 
@@ -68,8 +70,9 @@ class APIDoc(object):
         self.app = app
         app.extensions['api_doc'] = self
         if app.config['DEBUG']:
-            register_blueprint = fire_event_bp(self.app.register_blueprint, self)
-            self.app.register_blueprint = MethodType(register_blueprint, self.app)
+            """ 动态的给app register_blueprint加上装饰器"""
+            rb = fire_event_bp(self.app.register_blueprint, self)
+            self.app.register_blueprint = MethodType(rb, self.app)
             self.configure_blueprint(app)
             self.show_functions(app)
 
@@ -80,6 +83,14 @@ class APIDoc(object):
     def hidden_blueprint(self, bp):
         """ 忽略的blueprint"""
         self._hidden_bp_list.add(bp)
+    
+    def is_hidden_endpoint(self, endpoint):
+        """ 过滤endpoint"""
+        bp_name = endpoint.split('.')[0]
+        if bp_name in self._hidden_bp_list:
+            return True
+        else:
+            return False
     
     def show_functions(self, app):
         """ 显示的函数"""
@@ -94,15 +105,23 @@ class APIDoc(object):
         self.parse_app_rules()
     
     def is_first_rule(self, rule):
+        """ 第一次加载规则"""
         endpoint = rule.endpoint
-        result = endpoint in self.view_functions and endpoint not in self.load_endpoints
+        result = (
+            endpoint in self.view_functions and
+            endpoint not in self.load_endpoints and
+            not self.is_hidden_endpoint(endpoint)
+        )
         return result
     
     def parse_app_rules(self):
+        """ 解析所有规则"""
+        global _api_list
         rules = self.app.url_map._rules
         for rule in rules:
+            endpoint = rule.endpoint
             if self.is_first_rule(rule):
-                func = self.view_functions[rule.endpoint]
-                self.load_endpoints.add(rule.endpoint)
-                api = _Api(rule.rule, rule.endpoint, rule.methods, func)
-                _api_list.append(api)
+                func = self.view_functions[endpoint]
+                self.load_endpoints.add(endpoint)
+                api = _Api(rule.rule, endpoint, rule.methods, func)
+                _api_list[endpoint] = api

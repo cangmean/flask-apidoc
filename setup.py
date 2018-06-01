@@ -10,6 +10,6 @@ setup(
     author='cangmean',
     url='https://github.com/cangmean/flask-apidoc',
     install_requires=[
-        'Flask',
+        'flask', 'pyyaml'
     ],
 )

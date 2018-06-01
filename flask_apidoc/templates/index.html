@@ -11,7 +11,7 @@
     <div class="container" style="margin-top: 100px;">
         <div class="row">
             <div class="list-group" style="width: 100%;">
-                {% for api in api_list %}
+                {% for api in api_list.values() %}
                 <div class="list-group-item">
                     <a href="/apidocs/{{ api.endpoint }}">
                         {{ api.url }}
