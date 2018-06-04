@@ -23,19 +23,31 @@ class _Api(object):
     def __init__(self, url, endpoint, methods, func):
         self.url = url
         self.endpoint = endpoint
-        self.methods = methods
         self.func = func
+        if methods:
+            self._methods = [method.upper() for method in methods]
+        else:
+            self._methods = []
+        self.parser = _DOCParser(self)
     
-    @property
-    def doc(self):
-        return self.parse_doc(self._doc())
+    def method_doc(self, method):
+        return self.parser.handle(method)
     
     def _doc(self):
-        return self.func.__doc__ or ''
+        return self.func.__doc__
 
     @property
     def hash_key(self):
         return hash(self.endpoint)
+    
+    @property
+    def methods(self):
+        methods = []
+        _methods = ['GET', 'POST', 'PUT', 'DELETE']
+        for method in _methods:
+            if method in self._methods:
+                methods.append(method)
+        return methods
 
     def __hash__(self):
         return self.hash_key
@@ -49,6 +61,31 @@ class _Api(object):
         return '<Api url: {}, endpoint: {}>'.format(self.url, self.endpoint)
 
 
+class _DOCParser(object):
+
+    def __init__(self, api):
+        self.api = api
+
+    def handle(self, method):
+        try:
+            docs = yaml.load(self.api._doc())
+            self.docs = self._key_upper(docs) or {}
+        except Exception as e:
+            self.docs = {'desc': self.api._doc()}
+        return self.info(method)
+    
+    def _key_upper(self, docs):
+        return {k.upper(): v for k, v in docs.items()}
+    
+    def _method_info(self, method):
+        """ 文档信息"""
+        method_info = self.docs.get(method, {})
+        return method_info
+    
+    def info(self, method):
+        info = self._method_info(method)
+        return info
+
 class APIDoc(object):
 
     def __init__(self, app=None):
@@ -56,7 +93,7 @@ class APIDoc(object):
         self.view_functions = {}
         self._hidden_bp_list = ['apidocs']
         self._hidden_endpoints = []
-        
+
         if app is not None:
             self.init_app(app)
 

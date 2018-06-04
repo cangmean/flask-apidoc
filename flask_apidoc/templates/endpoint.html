@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% from "func.html" import render_params %}
+
+{% block content %}
+<div class="container" style="margin-top: 100px;">
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <h4>Url</h4>
+                <pre><code class="bash">{{ api.url }}</code></pre>
+                <h4>接口描述</h4>
+                <pre><code>{{ docs.desc or "" }}</code></pre>
+                <h4>参数</h4>
+                {{ render_params(docs.param) }}
+                <h4>返回值</h4>
+                <pre><code class="json">{{ docs.resp or "" }}</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

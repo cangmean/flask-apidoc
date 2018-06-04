@@ -1,0 +1,14 @@
+.bg-header {
+    /* background-color: #6f5499; */
+    background-color: #17a2b8;
+    padding: 10px 0;
+}
+
+.bg-header a {
+    color: white;
+    text-decoration: none;
+}
+
+.bg-header a:hover {
+    color: #fd7e14;
+}

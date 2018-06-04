@@ -1,0 +1,43 @@
+{% macro render_method(endpoint, method) %}
+{# 渲染方法　#}
+{% set method_colors = {
+    'GET': '#61affe',
+    'POST': '#49cc90',
+    'PUT': '#fca130',
+    'DELETE': '#f93e3e',
+}%}
+<a
+    class="btn btn-default btn-sm"
+    style="width: 80px; background-color: {{ method_colors[method]}}; color: #fff; font-weight: 700;"
+    href="{{ url_for('apidocs.endpoint', _endpoint=endpoint, method=method) }}"
+>{{ method }}</a>
+{% endmacro %}
+
+
+{% macro render_params(params) %}
+{# 渲染文档参数　#}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th style="width: 20%">字段</th>
+            <th style="width: 10%">类型</th>
+            <th style="width: 10%">必填</th>
+            <th style="width: 20%">默认值</th>
+            <th style="width: 40%">描述</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if params %}
+            {% for field, options in params.items() %}
+            <tr>
+                <td>{{ field }}</td>
+                <td>{{ options['type'] or 'string' }}</td>
+                <td>{{ options['required'] or 'False' }}</td>
+                <td>{{ options['default'] or '' }}</td>
+                <td>{{ options['desc'] or '' }}</td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
+{% endmacro %}
