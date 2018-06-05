@@ -2,7 +2,7 @@
 flask-apidoc 是在线解析接口文档的库。
 
 ### 下载
-通过github下载到本地后， 进入目录执行一下命令完成安装
+通过github下载到本地后， 进入目录执行以下命令完成安装
 ```bash
 python setup.py install
 ```
@@ -32,7 +32,7 @@ def index():
 ```
 
 ### 文档格式
-flask-apidoc 解析具有格式的文档，
+flask-apidoc 解析具有格式的文档
 - 一级类别
     - desc 接口的描述
     - method 具体的方法名 get, post, put, delete (目前只支持这些)
@@ -46,8 +46,8 @@ flask-apidoc 解析具有格式的文档，
             - desc: 参数描述, 默认空字符串
     - resp 返回值
 
-### blueprint与methodView
-不管是蓝图还是类方式， 解析过程与视图函数是相同的
+### 蓝图与MethodView方式
+不管是蓝图还是类方式， 解析过程与视图函数是相同的， `DEBUG=False` 时不解析文档。
 ```python
 from flask import Flask, Blueprint, jsonfiy
 from flask_apidoc import APIDoc
