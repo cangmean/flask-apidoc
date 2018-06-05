@@ -12,3 +12,27 @@
 .bg-header a:hover {
     color: #fd7e14;
 }
+
+.btn-blue {
+    background-color: #61affe;
+    color: #fff;
+    font-weight: 700;
+}
+
+.btn-green {
+    background-color: #49cc90;
+    color: #fff;
+    font-weight: 700;
+}
+
+.btn-yellow {
+    background-color: #fca130;
+    color: #fff;
+    font-weight: 700;
+}
+
+.btn-red {
+    background-color: #f93e3e;
+    color: #fff;
+    font-weight: 700;
+}
