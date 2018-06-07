@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-
-{% from "func.html" import render_params, render_form %}
-
+{% from "func.html" import render_params, render_mock_form %}
 {% block content %}
 <div class="container" style="margin-top: 100px;">
     <div class="row">
@@ -17,7 +15,16 @@
                 <pre><code class="json">{{ docs.resp or "" }}</code></pre>
 
             </div>
+            {{ render_mock_form(api, docs) }}
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block load_js %}
+<script>
+    $('.mock').click(function(){
+        $('.mock-form').show();
+    })
+</script>
 {% endblock %}

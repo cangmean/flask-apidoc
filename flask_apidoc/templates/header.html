@@ -1,12 +1,16 @@
 <header class="navbar navbar-static-top bs-docs-nav bg-header">
     <div class="container">
         <div class="navbar-header">
-            <a href="/apidocs"><b>API 接口文档</b></a>
+            <a href="/apidocs">
+                <b>API 接口文档</b>
+            </a>
         </div>
-        <nav class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li>/hello</li>
-            </ul>
-        </nav>
+        {% if docs is defined %}
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="javascript: void(0);" data-toggle="modal" data-target="#myModal"><b>API请求</b></a>
+            </li>
+        </ul>
+        {% endif %}
     </div>
 </header>
